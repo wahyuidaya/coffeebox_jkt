@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// ======================================================
+/// Tabel 4.6 - Pengguna
+/// ======================================================
+model Pengguna {
+  id                 Int       @id @default(autoincrement()) @db.UnsignedInt
+  namaLengkap        String    @map("nama_lengkap") @db.VarChar(50)
+  username           String    @unique(map: "uq_pengguna_username") @db.VarChar(20)
+  password           String    @db.VarChar(255)
+  noTelepon          String?   @map("no_telepon") @db.VarChar(15)
+  email              String?   @db.VarChar(50)
+  peran              Peran
+  levelAdmin         Int?      @map("level_admin") @db.UnsignedTinyInt
+  wajibGantiPassword Boolean   @default(false) @map("wajib_ganti_password")
+  statusAktif        Boolean   @default(true) @map("status_aktif")
+  resetToken         String?   @map("reset_token") @db.VarChar(64)
+  resetTokenExpiry   DateTime? @map("reset_token_expiry") @db.Timestamp(0)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  pesanan Pesanan[] @relation("KasirPesanan")
+
+  @@map("pengguna")
+}
+
+/// ======================================================
+/// Tabel 4.7 - Menu
+/// ======================================================
+model Menu {
+  id                   Int             @id @default(autoincrement()) @db.UnsignedInt
+  jenis                JenisMenu
+  kategori             String?         @db.VarChar(20)
+  nama                 String          @db.VarChar(40)
+  deskripsi            String?         @db.VarChar(100)
+  harga                Decimal         @db.Decimal(6, 0)
+  foto                 String?         @db.VarChar(80)
+  butuhVarian          Boolean         @default(true) @map("butuh_varian")
+  statusAktif          Boolean         @default(true) @map("status_aktif")
+  statusDiskon         Boolean         @default(false) @map("status_diskon")
+  persentaseDiskon     Int             @default(0) @map("persentase_diskon") @db.UnsignedTinyInt
+  tanggalMulaiDiskon   DateTime?       @map("tanggal_mulai_diskon") @db.Date
+  tanggalSelesaiDiskon DateTime?       @map("tanggal_selesai_diskon") @db.Date
+  createdAt            DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt            DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  detailPesanan       DetailPesanan[]
+  itemSebagaiBundling ItemBundling[] @relation("BundlingItems")
+  itemSebagaiMenu     ItemBundling[] @relation("MenuItems")
+
+  @@map("menu")
+}
+
+/// ======================================================
+/// Tabel 4.8 - Item Bundling
+/// ======================================================
+model ItemBundling {
+  id         Int @id @default(autoincrement()) @db.UnsignedInt
+  idBundling Int @map("id_bundling") @db.UnsignedInt
+  idMenu     Int @map("id_menu") @db.UnsignedInt
+  jumlah     Int @default(1) @db.UnsignedTinyInt
+
+  bundling Menu @relation("BundlingItems", fields: [idBundling], references: [id], onDelete: Cascade, map: "fk_item_bundling_bundling")
+  menu      Menu @relation("MenuItems", fields: [idMenu], references: [id], onDelete: Cascade, map: "fk_item_bundling_menu")
+
+  @@index([idBundling], map: "idx_item_bundling_id_bundling")
+  @@index([idMenu], map: "fk_item_bundling_menu")
+
+  @@map("item_bundling")
+}
+
+/// ======================================================
+/// Tabel 4.9 - Meja
+/// ======================================================
+model Meja {
+  id          Int      @id @default(autoincrement()) @db.UnsignedSmallInt
+  nomorMeja   String   @unique(map: "uq_meja_nomor_meja") @map("nomor_meja") @db.VarChar(5)
+  statusAktif Boolean  @default(true) @map("status_aktif")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  pesanan Pesanan[]
+
+  @@map("meja")
+}
+
+/// ======================================================
+/// Tabel 4.10 - Pesanan
+/// ======================================================
+model Pesanan {
+  id               Int              @id @default(autoincrement()) @db.UnsignedInt
+  kodePesanan     String            @unique(map: "kode_pesanan") @map("kode_pesanan") @db.VarChar(15)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamp(0)
+  tanggalPesanan   DateTime         @default(dbgenerated("(cast(`created_at` as date))")) @map("tanggal_pesanan") @db.Date
+  idMeja           Int              @map("id_meja") @db.UnsignedSmallInt
+  idKasir          Int?             @map("id_kasir") @db.UnsignedInt
+  namaPelanggan    String           @map("nama_pelanggan") @db.VarChar(50)
+  teleponPelanggan String           @map("telepon_pelanggan") @db.VarChar(15)
+  metodePembayaran MetodePembayaran @map("metode_pembayaran")
+  buktiPembayaran  String?          @map("bukti_pembayaran") @db.VarChar(100)
+  status           StatusPesanan
+  alasanPembatalan String?          @map("alasan_pembatalan") @db.VarChar(100)
+  catatan          String?          @db.Text
+  totalHarga       Decimal          @map("total_harga") @db.Decimal(7, 0)
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  detailPesanan DetailPesanan[]
+
+  kasir Pengguna? @relation("KasirPesanan", fields: [idKasir], references: [id], map: "fk_pesanan_kasir")
+  meja  Meja      @relation(fields: [idMeja], references: [id], map: "fk_pesanan_meja")
+
+  @@index([idKasir], map: "idx_pesanan_id_kasir")
+  @@index([idMeja], map: "idx_pesanan_id_meja")
+
+  @@map("pesanan")
+}
+
+/// ======================================================
+/// Tabel 4.11 - Detail Pesanan
+/// ======================================================
+model DetailPesanan {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  idPesanan   Int     @map("id_pesanan") @db.UnsignedInt
+  idMenu      Int?    @map("id_menu") @db.UnsignedInt
+  namaItem    String  @map("nama_item") @db.VarChar(50)
+  harga       Decimal @db.Decimal(6, 0)
+  jumlah      Int     @db.UnsignedTinyInt
+  varian      Varian?
+  catatanItem String? @map("catatan_item") @db.VarChar(80)
+  subtotal    Decimal @db.Decimal(7, 0)
+
+  menu    Menu?    @relation(fields: [idMenu], references: [id], map: "fk_detail_pesanan_menu")
+  pesanan Pesanan  @relation(fields: [idPesanan], references: [id], onDelete: Cascade, map: "fk_detail_pesanan_pesanan")
+
+  @@index([idMenu], map: "idx_detail_pesanan_id_menu")
+  @@index([idPesanan], map: "fk_detail_pesanan_pesanan")
+
+  @@map("detail_pesanan")
+}
+
+/// ======================================================
+/// Tabel 4.12 - QRIS
+/// ======================================================
+model Qris {
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
+  gambarQris  String?  @map("gambar_qris") @db.VarChar(60)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("qris")
+}
+
+/// ======================================================
+/// ENUM
+/// ======================================================
+enum Peran {
+  admin
+  kasir
+}
+
+enum JenisMenu {
+  menu
+  bundling
+}
+
+enum Varian {
+  iced
+  hot
+}
+
+enum MetodePembayaran {
+  cash
+  qris
+}
+
+enum StatusPesanan {
+  menunggu_konfirmasi
+  diproses
+  sedang_disiapkan
+  sedang_diantar
+  selesai
+  dibatalkan
+}

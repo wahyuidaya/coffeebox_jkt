@@ -1,0 +1,555 @@
+/* ================================================================
+   0. VARIABEL WARNA GLOBAL
+   Semua warna tema (coklat/gold = brand, s* = warna status badge)
+   ================================================================ */
+:root {
+  --br: #1A0F07; --bm: #5C2E1A; --bl: #B87040; --gold: #C8972F;
+  --gl: #E8C878; --cream: #FBF4E8; --cb: #FEFCF7; --bd: #DFC9A8;
+  --tm: #7A5C3A; --white: #fff;
+  --sn: #E8F5E9; --snt: #1B5E20; --snb: #81C784; /* status: menunggu konfirmasi (hijau muda) */
+  --sp: #FFF8E1; --spt: #E65100; --spb: #FFB74D; /* status: sedang disiapkan (oranye) */
+  --sd: #E3F2FD; --sdt: #0D47A1; --sdb: #64B5F6; /* status: diproses (biru) */
+  --sk: #F1F8E9; --skt: #33691E; --skb: #AED581; /* status: selesai (hijau tua) */
+  --sv: #F3E5F5; --svt: #6A1B9A; --svb: #BA68C8; /* status: sedang diantar (ungu) */
+  --sc: #FFEBEE; --sct: #B71C1C; --scb: #EF9A9A; /* status: dibatalkan (merah) */
+}
+
+/* ================================================================
+   1. RESET & BASE
+   ================================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #F0E8DA; color: var(--br); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* ================================================================
+   2. KERANGKA LAYOUT (shell dashboard: topbar + sidebar + content)
+   Dipakai di semua halaman kasir setelah login
+   ================================================================ */
+.main { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 64px); min-height: 0; }
+.content { flex: 1; overflow-y: auto; padding: 22px; }
+.pg { display: none; }
+.pg.on { display: block; }
+
+/* --- 2a. Topbar (header atas) --- */
+.topbar { background: var(--br); padding: 0 22px; height: 64px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; border-bottom: 1px solid rgba(200,151,47,.25); box-shadow: 0 1px 0 rgba(200,151,47,.08); }
+.logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 17px; font-weight: 700; }
+.tr { display: flex; align-items: center; gap: 14px; }
+.tu { font-size: 12px; color: var(--gl); opacity: .8; }
+.tbdg { background: var(--gold); color: var(--br); font-size: 11px; font-weight: 500; padding: 3px 11px; border-radius: 20px; }
+.tclk { font-size: 11px; color: var(--gl); opacity: .6; font-feature-settings: "tnum"; }
+
+/* --- 2b. Sidebar (menu navigasi kiri) --- */
+.sidebar { width: 220px; background: var(--br); display: flex; flex-direction: column; flex-shrink: 0; height: 100%; border-right: 1px solid rgba(200,151,47,.2); }
+.sidebar-logo { padding: 18px 20px 16px; border-bottom: 1px solid rgba(255,255,255,.07); }
+.sidebar-logo-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold); }
+.sidebar-logo-sub { font-size: 10px; color: var(--gl); opacity: .4; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-section { padding: 16px 12px 8px; }
+.sidebar-section + .sidebar-section { border-top: 1px solid rgba(255,255,255,.06); }
+.ns { font-size: 9px; letter-spacing: 2px; color: var(--gl); opacity: .3; padding: 0 8px 6px; text-transform: uppercase; }
+.ni { padding: 9px 10px; font-size: 12.5px; color: var(--gl); opacity: .6; cursor: pointer; display: flex; align-items: center; gap: 9px; border-radius: 8px; transition: .15s; margin-bottom: 2px; text-decoration: none; }
+.ni:hover { opacity: 1; background: rgba(255,255,255,.06); }
+.ni.on { opacity: 1; background: rgba(200,151,47,.13); color: var(--gold); }
+.ni.danger { color: #EF9A9A; opacity: .75; }
+.ni.danger:hover { background: rgba(239,154,154,.08); opacity: 1; }
+.sidebar-bottom { margin-top: auto; padding: 12px; border-top: 1px solid rgba(255,255,255,.07); }
+
+/* ================================================================
+   3. HALAMAN LOGIN & GANTI PASSWORD (di luar shell dashboard)
+   Dipakai di: src/app/kasir/login/page.tsx
+   ================================================================ */
+.login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--br); padding: 20px; }
+.login-box { background: var(--cb); border-radius: 20px; padding: 36px 32px; width: 100%; max-width: 380px; border: 1px solid var(--bd); }
+.login-logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--br); text-align: center; margin-bottom: 4px; }
+.login-sub { font-size: 11px; color: var(--tm); text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px; }
+.login-inp { width: 100%; padding: 11px 14px; border: 1.5px solid var(--bd); border-radius: 10px; font-size: 13px; font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--br); margin-bottom: 11px; }
+.login-inp:focus { outline: none; border-color: var(--bl); }
+.login-btn { width: 100%; padding: 13px; background: var(--br); color: var(--gold); border: none; border-radius: 11px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 4px; }
+.login-err { background: #FFEBEE; border: 1px solid #EF9A9A; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #C62828; margin-bottom: 11px; display: none; }
+
+/* Halaman ganti password wajib (belum ada file client-nya, disiapkan dulu) */
+.chpass-screen { display: none; align-items: center; justify-content: center; min-height: 100vh; background: var(--br); padding: 20px; }
+.chpass-box { background: var(--cb); border-radius: 20px; padding: 32px; width: 100%; max-width: 400px; border: 1px solid var(--bd); }
+.pass-strength { height: 4px; border-radius: 3px; margin-top: 5px; transition: .3s; background: var(--bd); }
+.pass-hint { font-size: 10px; color: var(--tm); margin-top: 4px; }
+
+/* ================================================================
+   4. JUDUL HALAMAN (dipakai di Orders, Riwayat, Guide, Dashboard, dll)
+   ================================================================ */
+.stlbl { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--br); margin-bottom: 14px; }
+.db-sub { font-size: 11px; color: var(--tm); margin-top: 3px; } /* subjudul di bawah .stlbl / .db-greet */
+
+/* ================================================================
+   5. KARTU STATISTIK / KPI
+   CATATAN: .sc2+.sval (dipakai di Orders & Riwayat, dalam .stats-row)
+   dan .db-kpi+.db-kpi-val (dipakai di Dashboard, dalam .db-kpi-grid)
+   FUNGSINYA SAMA, cuma beda ukuran font (26px vs 30px). Sengaja
+   dipisah karena dashboard butuh angka lebih besar. Bisa disatukan
+   kalau mau lebih ringkas.
+   ================================================================ */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.sc2 { background: var(--cb); border: 1px solid var(--bd); border-radius: 13px; padding: 15px 16px; }
+.slbl { font-size: 10px; color: var(--tm); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+.sval { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--br); }
+.ssub { font-size: 10px; color: var(--tm); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.sdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; }
+
+.db-kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:18px; }
+.db-kpi { background:var(--cb); border:1px solid var(--bd); border-radius:13px; padding:15px 16px; }
+.db-kpi-val { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; color:var(--br); }
+
+/* ================================================================
+   6. FILTER BAR & PENCARIAN (dipakai di Orders & Riwayat)
+   ================================================================ */
+.fbar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.fbtn { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--bd); background: var(--cb); color: var(--tm); transition: .15s; }
+.fbtn.on { background: var(--br); color: var(--gold); border-color: var(--br); }
+.fsrch { flex: 1; min-width: 160px; padding: 7px 12px; border: 1px solid var(--bd); border-radius: 9px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: var(--cb); color: var(--br); }
+.fsrch:focus { outline: none; border-color: var(--bl); }
+
+/* ================================================================
+   7. DASHBOARD KASIR (halaman ringkasan/beranda)
+   Dipakai di: DashboardKasirClient.tsx
+   ================================================================ */
+.db-welcome { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.db-greet { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--br); }
+.db-date { font-size:11px; color:var(--tm); background:var(--cream); border:1px solid var(--bd); padding:5px 12px; border-radius:20px; }
+.db-row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.db-panel { background:var(--cb); border:1px solid var(--bd); border-radius:13px; padding:18px; }
+.db-panel-ttl { font-size:11px; font-weight:600; color:var(--tm); text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px; }
+
+/* -- panel pemasukan (QRIS/Cash) -- */
+.db-rev-big { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--br); margin-bottom:12px; }
+.db-rev-row { display:flex; gap:10px; }
+.db-rev-item { flex:1; background:var(--cream); border-radius:9px; padding:10px 12px; }
+.db-rev-label { font-size:10px; color:var(--tm); margin-bottom:4px; display:flex; align-items:center; gap:5px; }
+.db-rev-val { font-size:15px; font-weight:600; font-family:'Playfair Display',serif; color:var(--br); }
+.db-rev-count { font-size:10px; color:var(--tm); margin-top:2px; }
+
+/* -- panel pesanan terakhir -- */
+.db-recent-list { display:flex; flex-direction:column; gap:7px; max-height:220px; overflow-y:auto; }
+.db-recent-item { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:var(--cream); border-radius:9px; font-size:11px; }
+.db-recent-id { font-weight:700; color:var(--br); font-family:'Playfair Display',serif; }
+.db-recent-meta { color:var(--tm); font-size:10px; margin-top:1px; }
+
+/* ================================================================
+   8. KARTU PESANAN (grid pesanan masuk)
+   Dipakai di: OrdersClient.tsx
+   ================================================================ */
+.ogrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+.ocard { background: var(--cb); border: 1px solid var(--bd); border-radius: 15px; overflow: hidden; transition: .15s; }
+.ocard:hover { border-color: var(--bl); }
+.oh { padding: 12px 14px 9px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--bd); }
+.onum { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--br); }
+.ometa { font-size: 10px; color: var(--tm); }
+.ob { padding: 11px 14px; }
+.oir { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #F0E8DA; }
+.oir:last-child { border: none; }
+.oin { font-size: 12px; color: var(--br); }
+.oiq { font-size: 11px; color: var(--tm); }
+.oip { font-size: 12px; font-weight: 500; color: var(--bm); }
+.onote { background: #FFFBF0; border: 1px solid var(--gl); border-radius: 7px; padding: 7px 9px; font-size: 10px; color: #7A5C2E; margin-top: 7px; font-style: italic; }
+.ocby { font-size: 10px; color: var(--tm); margin-top: 5px; }
+.of { padding: 9px 14px 13px; border-top: 1px solid var(--bd); display: flex; align-items: center; justify-content: space-between; gap: 7px; flex-wrap: wrap; }
+.otot { font-size: 14px; font-weight: 500; font-family: 'Playfair Display', serif; color: var(--br); }
+.arow { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* -- animasi "sedang dibuat / sedang diantar" -- */
+.pulse-wrap { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--spt); font-weight: 500; margin-top: 5px; }
+.pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--spt); animation: pulse 1.2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
+
+/* ================================================================
+   9. BADGE STATUS PESANAN & METODE BAYAR
+   Dipakai di: Dashboard, Orders, Riwayat
+   Nama class status yang BAKU (jangan buat variasi lain):
+   s-new / s-done / s-proc / s-deliver / s-paid / s-cancel
+   ================================================================ */
+.spill { font-size: 9px; font-weight: 500; padding: 3px 9px; border-radius: 8px; letter-spacing: .3px; }
+.s-new { background: var(--sn); color: var(--snt); border: 1px solid var(--snb); }     /* menunggu konfirmasi */
+.s-proc { background: var(--sp); color: var(--spt); border: 1px solid var(--spb); }    /* sedang disiapkan */
+.s-done { background: var(--sd); color: var(--sdt); border: 1px solid var(--sdb); }    /* diproses */
+.s-paid { background: var(--sk); color: var(--skt); border: 1px solid var(--skb); }    /* selesai */
+.s-deliver { background: var(--sv); color: var(--svt); border: 1px solid var(--svb); } /* sedang diantar */
+.s-cancel { background: var(--sc); color: var(--sct); border: 1px solid var(--scb); }  /* dibatalkan */
+
+.ptag { font-size: 9px; padding: 2px 8px; border-radius: 7px; font-weight: 500; }
+.p-qris { background: #E8EAF6; color: #283593; border: 1px solid #9FA8DA; }
+.p-cash { background: #FFF8E1; color: #E65100; border: 1px solid #FFCC80; }
+
+.proof-dot { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; display: inline-block; margin-right: 3px; }
+.proof-dot.none { background: #EF9A9A; }
+
+/* ================================================================
+   10. TOMBOL AKSI (semua varian .btn-*)
+   ================================================================ */
+.btn { padding: 7px 12px; border-radius: 9px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: .15s; }
+.btn:active { transform: scale(.97); }
+.btn-confirm { background: var(--br); color: var(--gold); }
+.btn-proc { background: #E65100; color: #fff; }
+.btn-done { background: #1565C0; color: #fff; }
+.btn-deliver { background: #7B1FA2; color: #fff; }
+.btn-finish { background: #00695C; color: #fff; }
+.btn-paid { background: #2E7D32; color: #fff; }
+.btn-cancel { background: transparent; color: var(--sct); border: 1px solid var(--scb); }
+.btn-receipt { background: var(--cream); color: var(--bm); border: 1px solid var(--bd); }
+.btn-proof { background: #E3F2FD; color: #0D47A1; border: 1px solid #90CAF9; }
+.btn-locked-info { font-size: 11px; color: var(--tm); font-style: italic; padding: 6px 10px; } /* teks "🔒 Ditangani kasir lain" */
+
+/* ================================================================
+   11. TABEL RIWAYAT TRANSAKSI
+   Dipakai di: HistoryClient.tsx
+   ================================================================ */
+.htbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.htbl th { background: var(--cream); color: var(--tm); font-weight: 500; padding: 9px 14px; text-align: left; border-bottom: 2px solid var(--bd); font-size: 10px; letter-spacing: .5px; text-transform: uppercase; }
+.htbl td { padding: 10px 14px; border-bottom: 1px solid var(--bd); color: var(--br); vertical-align: middle; }
+.htbl tr:hover td { background: #FFFBF5; }
+.aksi-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+.aksi-actions .btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* ================================================================
+   12. MODAL (overlay + kotak dialog + form/isi di dalamnya)
+   Dipakai di: OrdersClient.tsx, HistoryClient.tsx
+   ================================================================ */
+.mo { display: none; position: fixed; inset: 0; background: rgba(26, 15, 7, .5); z-index: 200; align-items: center; justify-content: center; }
+.mo.open { display: flex; }
+.mbox { background: var(--cb); border-radius: 18px; padding: 26px; width: 90%; max-width: 420px; border: 1px solid var(--bd); max-height: 90vh; overflow-y: auto; position: relative; }
+.mttl { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: var(--br); margin-bottom: 14px; }
+
+/* -- header modal (pakai komponen ModalHeader, sticky di atas saat scroll) -- */
+.modal-header { position: sticky; top: 0; z-index: 2; background: var(--cb); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--bd); }
+.modal-header-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--br); line-height: 1.3; }
+.modal-header-sub { font-size: 11px; color: var(--tm); margin-top: 4px; }
+.modal-close-btn { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--bd); background: var(--cream); color: var(--tm); font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease; }
+.modal-close-btn:hover { background: #FFEBEE; border-color: #EF9A9A; color: #C62828; }
+.modal-close-btn:active { transform: scale(0.92); }
+
+.mclose {
+  position: sticky;
+  top: 0;
+  float: right;
+  margin-bottom: -28px;
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  background: var(--cream); color: var(--tm); font-size: 15px; line-height: 1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: .15s; z-index: 10;
+}
+.mclose:hover { background: var(--bd); color: var(--br); }
+
+/* -- isi/baris modal generik (rincian, total, dll) -- */
+.mir { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--bd); font-size: 12px; }
+.mir:last-child { border: none; }
+.mtot { display: flex; justify-content: space-between; padding-top: 9px; margin-top: 5px; border-top: 2px solid var(--bd); font-size: 15px; font-weight: 600; font-family: 'Playfair Display', serif; color: var(--br); }
+
+/* -- pilihan metode bayar di dalam modal -- */
+.mpopt { flex: 1; padding: 11px; border: 1.5px solid var(--bd); border-radius: 11px; cursor: pointer; text-align: center; transition: .15s; }
+.mpopt.sel { border-color: var(--br); background: var(--cream); }
+.mpopt .ic { font-size: 20px; margin-bottom: 3px; }
+.mpopt .lbl { font-size: 12px; font-weight: 500; color: var(--br); }
+.mpopt .dsc { font-size: 10px; color: var(--tm); margin-top: 1px; }
+
+/* -- tombol aksi di footer modal -- */
+.mbtns { display: flex; gap: 9px; margin-top: 14px; }
+.mbtn { flex: 1; padding: 11px; border-radius: 11px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; }
+.mbtn-pri { background: var(--br); color: var(--gold); }
+.mbtn-sec { background: transparent; color: var(--tm); border: 1.5px solid var(--bd); }
+
+/* -- gambar bukti pembayaran QRIS di dalam modal -- */
+.proof-img-wrap {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.proof-img-wrap img {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--bd);
+}
+
+/* -- Modal Struk (tampil di layar, BUKAN yang di window print) --
+   Dipakai di OrdersClient.tsx & HistoryClient.tsx. Sebelumnya style ini
+   ditulis inline berulang panjang di kedua file, sekarang jadi class
+   biar 1 sumber kebenaran. Kalau mau ubah tampilan struk di layar
+   (bukan hasil print fisik), cukup edit di sini. */
+.receipt-card { background: var(--white); border-radius: 14px; border: 1px solid var(--bd); padding: 22px; }
+.receipt-brand { text-align: center; font-family: 'Playfair Display', serif; font-size: 19px; color: var(--br); font-weight: 700; }
+.receipt-subtitle { text-align: center; font-size: 10px; color: var(--tm); letter-spacing: 1.5px; margin-top: 2px; }
+.receipt-kode { text-align: center; font-size: 10px; color: var(--tm); margin-top: 2px; margin-bottom: 12px; }
+.receipt-hr { border: none; border-top: 1px dashed var(--bd); margin: 10px 0; }
+.receipt-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
+.receipt-row .lbl { color: var(--tm); }
+.receipt-section-title { font-size: 11px; color: var(--tm); letter-spacing: .5px; margin-bottom: 8px; }
+.receipt-footer { text-align: center; font-size: 10px; color: var(--tm); margin-top: 16px; padding-top: 10px; border-top: 1px dashed var(--bd); }
+
+.pm-line { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.pm-line-name { font-size: 11px; color: var(--br); }
+.pm-line-meta { font-size: 10px; color: var(--tm); }
+.pm-line-sub { font-size: 11px; color: var(--br); }
+
+.pay-summary-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; color: var(--br); }
+.pay-summary-row.first { margin-top: 6px; border-top: 1px solid var(--bd); padding-top: 10px; }
+
+.ototal { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; font-family: 'Playfair Display', serif; padding: 9px 0 6px; border-top: 2px solid var(--br); margin-top: 6px; color: var(--br); }
+
+/* ================================================================
+   13. NOTIFIKASI TOAST (pojok kanan bawah)
+   ================================================================ */
+.notif { position: fixed; bottom: 22px; right: 22px; background: var(--br); color: var(--gold); padding: 11px 18px; border-radius: 11px; font-size: 12px; font-weight: 500; z-index: 300; transform: translateY(70px); opacity: 0; transition: .3s; pointer-events: none; }
+.notif.show { transform: translateY(0); opacity: 1; }
+
+/* ================================================================
+   14. MODE CETAK (struk / receipt di layar, saat window.print() dipanggil
+   pada halaman utama — BUKAN window baru dari printStruk())
+   ================================================================ */
+@media print {
+  body * { visibility: hidden; }
+  .receipt-print-area, .receipt-print-area * { visibility: visible; }
+  .receipt-print-area { position: fixed; left: 0; top: 0; width: 100%; border: none !important; box-shadow: none !important; }
+  .no-print { display: none !important; }
+}
+
+/* ================================================================
+   A. HAMBURGER, OVERLAY, SIDEBAR DRAWER + iOS SCROLL LOCK (<=1024px)
+   ================================================================ */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+.menu-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 15, 7, .5);
+  z-index: 140;
+}
+.sidebar-overlay.show { display: block; }
+
+@media (max-width: 1024px) {
+  .menu-toggle { display: flex; }
+
+  html, body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  .main { height: calc(100dvh - 64px); }
+  .content {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    bottom: 0;
+    height: calc(100dvh - 64px);
+    z-index: 150;
+    transform: translateX(-100%);
+    transition: transform .2s ease;
+    box-shadow: 4px 0 18px rgba(0,0,0,.25);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .sidebar-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+  }
+
+  .content { padding: 16px; }
+
+  body.modal-open .content {
+    overflow: hidden !important;
+    touch-action: none;
+  }
+
+  .mbox .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+}
+
+
+/* ================================================================
+   B. TOPBAR — badge role + jam tetap tampil, nama disembunyikan
+   ================================================================ */
+@media (max-width: 640px) {
+  .topbar {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+  .tr { flex-wrap: nowrap; gap: 8px; }
+
+  .tu { display: none; }
+  .tbdg { font-size: 10px; padding: 3px 8px; flex-shrink: 0; }
+  .tclk { font-size: 10px; flex-shrink: 0; }
+}
+
+
+/* ================================================================
+   C. GRID & KARTU STATISTIK
+   ================================================================ */
+@media (max-width: 640px) {
+  .content { padding: 12px; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
+
+  .stlbl { font-size: 17px; }
+  .db-greet { font-size: 18px; }
+
+  .stats-row,
+  .db-kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sval, .db-kpi-val { font-size: 20px; }
+
+  .db-row2 { grid-template-columns: 1fr; }
+  .ogrid { grid-template-columns: 1fr; }
+  .mbox { width: 94%; padding: 18px; border-radius: 14px; }
+  .htbl { min-width: 680px; }
+}
+
+@media (max-width: 374px) {
+  .stats-row,
+  .db-kpi-grid { grid-template-columns: 1fr; }
+  .sval, .db-kpi-val { font-size: 18px; }
+}
+
+
+/* ================================================================
+   D. FILTER BAR 
+   ================================================================ */
+.fbar-group { display: contents; }
+
+@media (max-width: 640px) {
+  /* default: SEMUA .fbar cukup flex-wrap biasa */
+  .fbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .fbar .fbtn {
+    flex: 1 1 calc(50% - 4px);
+    text-align: center;
+  }
+  .fbar .relative {
+    order: 99; /* selalu didorong ke baris paling akhir, apapun posisi DOM-nya */
+    flex: 1 1 100%;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  /* KHUSUS fbar yang punya kalender Hari Ini/Bulan Ini (Riwayat/Dashboard):
+     baru pakai grid dengan posisi eksplisit */
+  .fbar:has(.fbar-group) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fbar:has(.fbar-group) > .fbtn:first-of-type {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .fbar:has(.fbar-group) .fbar-group > .fbtn {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .fbar:has(.fbar-group) .fbar-group input[type="month"] {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+  }
+  .fbar:has(.fbar-group) > .fbtn:last-of-type {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .fbar:has(.fbar-group):has(input[type="month"]) > .fbtn:last-of-type {
+    grid-column: 2;
+  }
+  .fbar:has(.fbar-group) .relative {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+
+
+/* ================================================================
+   E. Kartu KPI 3-kolom (Riwayat) & grid 2-kolom (Panduan Alur)
+   ================================================================ */
+.stats-row-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 640px) {
+  .stats-row-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 374px) {
+  .stats-row-3 { grid-template-columns: 1fr; }
+}
+
+.guide-grid { grid-template-columns: 1fr 1fr; }
+@media (max-width: 834px) {
+  .guide-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ================================================================
+   F. PAGINASI TABEL — center di HP & tablet.
+   ================================================================ */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pagination {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+  .pagination-bar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .pagination {
+    justify-content: center;
+    width: 100%;
+  }
+}

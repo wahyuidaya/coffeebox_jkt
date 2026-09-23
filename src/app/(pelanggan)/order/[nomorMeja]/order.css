@@ -1,0 +1,493 @@
+/* ============================================================
+   ORDER.CSS — File gabungan style halaman pelanggan
+   ------------------------------------------------------------
+   1.  RESET & ROOT VARIABLES
+   2.  HEADER
+   3.  FILTER BAR & SEARCH
+   4.  HERO & STEP PROGRESS
+   5.  SECTION LABEL & CATEGORY TABS
+   6.  MENU GRID & MENU CARD
+   7.  PAGE SWITCHER (multi-page dalam 1 dokumen)
+   8.  ORDER SUMMARY (ringkasan pesanan / checkout)
+   9.  FORM INPUT (text/textarea)
+   10. ACTION BUTTON & BACK BUTTON
+   11. PAYMENT METHOD OPTIONS
+   12. QRIS PAYMENT PAGE
+   13. UPLOAD BUKTI BAYAR PAGE
+   14. DONE / SUCCESS PAGE
+   15. FLOATING CART
+   16. MODAL BOTTOM SHEET
+   17. DRINK ITEM
+   18. PAYMENT SUMMARY / READONLY FIELD / PAYMENT METHOD LINE
+   19. STATUS TRACKING PAGE
+   20. SHARED / REUSABLE PATTERNS
+   21. RESPONSIVE — TABLET (<=1023px)
+   22. RESPONSIVE — MOBILE (<=639px)
+
+   Arah: DESKTOP-FIRST, FULL-BLEED. Section 1-20 = ukuran desktop
+   (default, tanpa max-width di container manapun). Section 21
+   override ke tablet (shell dikotakin 480px), section 22 override
+   ke mobile (full-bleed lagi, tanpa shadow/box).
+   ============================================================ */
+
+/* ============================================================
+   1. RESET & ROOT VARIABLES
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0 }
+:root {
+  --br: #1A0F07; --bm: #5C2E1A; --bl: #B87040; --gold: #C8972F;
+  --gl: #E8C878; --cream: #FBF4E8; --cb: #FEFCF7; --bd: #DFC9A8;
+  --tm: #7A5C3A; --white: #fff;
+  --page-pad: 40px;
+}
+body {
+  font-family: 'DM Sans', sans-serif; color: var(--br); min-height: 100vh;
+  background: var(--cream);
+}
+.order-shell {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--cream);
+  position: relative;
+}
+
+
+/* ============================================================
+   2. HEADER
+   ============================================================ */
+.hdr { background: var(--br); padding: 20px; position: sticky; top: 0; z-index: 50; text-align: center; height: 96px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.hdr-logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); font-weight: 700; letter-spacing: 1px; }
+.hdr-sub { font-size: 9px; color: var(--gl); opacity: .65; letter-spacing: 2px; text-transform: uppercase; margin-top: 0px; }
+.tbl-badge { display: inline-block; background: var(--gold); color: var(--br); font-size: 9px; font-weight: 600; padding: 1px 8px; border-radius: 20px; margin-top: 2px; }
+
+
+/* ============================================================
+   3. FILTER BAR & SEARCH
+   ============================================================ */
+.filter-bar { display: flex; align-items: center; gap: 0; padding: 14px 24px; background: var(--cb); border-bottom: 1px solid var(--bd); position: sticky; top: 96px; z-index: 40; }
+.tabs-scroll { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+.tabs-scroll::-webkit-scrollbar { display: none; }
+.filter-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: 8px; }
+
+.search-wrap { display: flex; align-items: center; justify-content: center; gap: 5px; background: var(--cream); border: 1.5px solid var(--bd); border-radius: 20px; width: 34px; height: 34px; padding: 0; transition: width .3s ease; overflow: hidden; }
+.search-wrap.open { width: 200px; padding: 0 10px; justify-content: flex-start; }
+.search-wrap svg { width: 14px; height: 14px; stroke: var(--tm); fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; cursor: pointer; transform: translate(2px, 0px); }
+.search-wrap input { background: none; border: none; outline: none; font-size: 16px; color: var(--br); font-family: 'DM Sans', sans-serif; width: 0; transition: width .3s; padding: 0; }
+.search-wrap.open input { width: 158px; }
+.search-wrap input::placeholder { color: var(--bd); }
+
+.cart-icon-btn { position: relative; background: transparent; border: none; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: .2s; flex-shrink: 0; }
+.cart-icon-btn:active { opacity: .8; }
+.cart-badge { position: absolute; top: -2px; right: -2px; background: var(--tm); color: var(--white); font-size: 8px; font-weight: 700; min-width: 14px; height: 14px; border-radius: 50%; display: none; align-items: center; justify-content: center; padding: 0 2px; font-family: 'DM Sans', sans-serif; transition: background 0.3s ease; }
+.cart-badge.vis { display: flex; }
+.cart-icon-btn:has(.cart-badge.vis) .material-symbols-outlined { color: var(--gold) !important; }
+.cart-icon-btn:has(.cart-badge.vis) .cart-badge { background: var(--gold); color: var(--br); }
+
+
+/* ============================================================
+   4. HERO & STEP PROGRESS
+   ============================================================ */
+.hero { background: var(--bm); padding: 36px 20px 30px; text-align: center }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--white); font-weight: 700; line-height: 1.3 }
+.hero p { color: var(--gl); font-size: 14px; margin: 8px auto 0; opacity: .8; max-width: 520px; }
+
+.steps { display: flex; justify-content: center; align-items: center; gap: 0; margin-top: 22px }
+.stp { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--gl); opacity: .55 }
+.stp.on { opacity: 1 }
+.stp-d { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--gl); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--gl) }
+.stp.on .stp-d { background: var(--gold); border-color: var(--gold); color: var(--br) }
+.stp-line { width: 34px; height: 2px; background: var(--gl); opacity: .4; margin: 0 3px; align-self: center; }
+
+/* ============================================================
+   5. SECTION LABEL & CATEGORY TABS
+   ============================================================ */
+.sec-lbl { padding: 20px 24px 10px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--tm); font-weight: 500 }
+.tab { flex-shrink:0; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--bd); background: var(--white); color: var(--tm); transition: .15s }
+.tab.on { background: var(--br); color: var(--gold); border-color: var(--br) }
+
+
+/* ============================================================
+   6. MENU GRID & MENU CARD
+   ============================================================ */
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; padding: 0 32px 24px; }
+.mcard { background: var(--cb); border-radius: 14px; border: 1px solid var(--bd); overflow: hidden; cursor: pointer; transition: .15s; position: relative }
+.mcard.sel { border-color: var(--bl); box-shadow: 0 0 0 2px var(--bl) }
+.mcard-img-wrap { width: 100%; padding-top: 14px; display: flex; justify-content: center; background: var(--cream) }
+.mcard-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block; border: 2px solid var(--bd); box-shadow: 0 2px 8px rgba(0, 0, 0, .1) }
+.mcard-img-ph { width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; background: var(--white); border: 2px solid var(--bd); box-shadow: 0 2px 8px rgba(0, 0, 0, .08) }
+.mcard-body { padding: 12px 13px 14px }
+.mcard-cat { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--tm); margin-bottom: 3px }
+.mcard-name { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; color: var(--br); line-height: 1.3 }
+.mcard-desc { font-size: 11px; color: var(--tm); margin-top: 3px; line-height: 1.45 }
+.mcard-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 7px }
+.mcard-price { font-size: 15px; font-weight: 500; color: var(--bm) }
+.mcard-price-lg { font-size: 15px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--bm) }
+.mcard-disc-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px }
+.mcard-disc-chip { font-size: 9px; font-weight: 700; color: var(--bl); background: #F7E4CE; padding: 2px 6px; border-radius: 6px; line-height: 1.3 }
+.mcard-strike { font-size: 11px; color: var(--tm); text-decoration: line-through; font-weight: 400 }
+.qctrl { display: flex; align-items: center; gap: 5px }
+.qbtn { width: 21px; height: 21px; border-radius: 50%; border: 1.5px solid var(--bd); background: var(--white); color: var(--br); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1 }
+.qbtn.add { background: var(--br); border-color: var(--br); color: var(--white) }
+.qnum { font-size: 12px; font-weight: 500; min-width: 13px; text-align: center; cursor: pointer }
+.badge-hid { position: absolute; top: 7px; right: 7px; background: var(--bm); color: var(--white); font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 8px }
+.badge-club { position: absolute; top: 7px; right: 7px; background: #1A1A2E; color: #E8C878; font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 8px }
+
+/* BARU: Section header per kategori (mirip halaman admin Kelola Menu) —
+   muncul di atas grup item saat filter "Semua" (pecah per kategori) atau
+   saat 1 kategori/bundling/diskon dipilih (tetap tampil 1 header). Diberi
+   grid-column: 1/-1 supaya melebar penuh di dalam .mgrid yang pakai
+   auto-fill grid-template-columns. */
+.mcat-section { grid-column: 1/-1; display: flex; align-items: center; gap: 9px; margin: 4px 0 2px; padding-bottom: 12px; border-bottom: 1px solid var(--bd); }
+.mcat-section:first-child { margin-top: 0; }
+.mcat-section-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--br); }
+.mcat-section-cnt { font-size: 10px; color: var(--tm); background: var(--cream); padding: 2px 9px; border-radius: 8px; }
+
+
+/* ============================================================
+   7. PAGE SWITCHER
+   ============================================================ */
+.pg { display: none }
+.pg.on { display: block }
+
+
+/* ============================================================
+   8. ORDER SUMMARY
+   ============================================================ */
+.owrap { padding: 28px var(--page-pad); }
+.ocard { background: var(--cb); border: 1px solid var(--bd); border-radius: 14px; padding: 20px; margin-bottom: 12px }
+.ocard h3 { font-family: 'Playfair Display', serif; font-size: 17px; margin-bottom: 12px; color: var(--br) }
+.oitem { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--bd) }
+.oitem:last-child { border: none }
+.oitem-n { font-size: 13px; color: var(--br) }
+.oitem-q { font-size: 11px; color: var(--tm) }
+.oitem-p { font-size: 13px; font-weight: 500; color: var(--bm) }
+.ototal { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1.5px solid var(--bd) }
+.ototal-l { font-size: 13px; font-weight: 500 }
+.ototal-v { font-size: 18px; font-weight: 600; font-family: 'Playfair Display', serif; color: var(--br) }
+
+
+/* ============================================================
+   9. FORM INPUT
+   ============================================================ */
+.inp-lbl { font-size: 11px; color: var(--tm); margin-bottom: 5px; display: block }
+input.inp-f, textarea.inp-f {
+  -webkit-appearance: none !important; appearance: none !important;
+  background-color: var(--white) !important; border: 1px solid var(--bd) !important;
+  border-radius: 9px !important; padding: 12px !important; font-size: 16px !important;
+  font-family: 'DM Sans', sans-serif !important; color: var(--br) !important;
+  box-shadow: none !important; outline: none !important; width: 100% !important;
+}
+input.inp-f { height: 44px !important; }
+input.inp-f:focus, textarea.inp-f:focus { border-color: var(--bl) !important; box-shadow: none !important; --tw-ring-shadow: none !important; --tw-ring-color: transparent !important; }
+
+
+/* ============================================================
+   10. ACTION BUTTON & BACK BUTTON
+   ============================================================ */
+.act-btn { width: 100%; padding: 14px; border-radius: 13px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; border: none; margin-bottom: 9px }
+.btn-pri { background: var(--br); color: var(--gold) }
+.btn-sec { background: transparent; color: var(--tm); border: 1.5px solid var(--bd) }
+
+.back-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; margin: 18px var(--page-pad) 0; font-size: 12px; font-weight: 500; color: var(--tm); cursor: pointer; background: var(--white); border: 1px solid var(--bd); border-radius: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.back-btn:hover { background: var(--cream); border-color: var(--bm); color: var(--bm); transform: translateX(-4px); }
+.back-btn span.arr { transition: transform 0.3s ease; font-size: 16px; line-height: 1; }
+.back-btn:hover span.arr { transform: translateX(-2px); }
+
+
+/* ============================================================
+   11. PAYMENT METHOD OPTIONS
+   ============================================================ */
+.pay-opts { display: flex; flex-direction: column; gap: 9px }
+.pay-opt { display: flex; align-items: center; gap: 11px; padding: 13px; border: 1.5px solid var(--bd); border-radius: 11px; cursor: pointer; background: var(--white); transition: .15s }
+.pay-opt.sel { border-color: var(--br); background: var(--cream) }
+.pay-ic { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--cream) }
+.pay-inf { flex: 1 }
+.pay-nm { font-size: 13px; font-weight: 500; color: var(--br) }
+.pay-nt { font-size: 10px; color: var(--tm); margin-top: 1px }
+.pay-radio { width: 17px; height: 17px; border-radius: 50%; border: 2px solid var(--bd); display: flex; align-items: center; justify-content: center }
+.pay-opt.sel .pay-radio { border-color: var(--br) }
+.pay-rdot { width: 9px; height: 9px; border-radius: 50%; background: var(--br); display: none }
+.pay-opt.sel .pay-rdot { display: block }
+.cash-note { background: #FFF8E1; border: 1px solid #FFD54F; border-radius: 9px; padding: 11px; font-size: 11px; color: #5D4037; line-height: 1.6; display: none; margin-top: 7px }
+.cash-note.show { display: block }
+
+
+/* ============================================================
+   12. QRIS PAYMENT PAGE
+   ============================================================ */
+.qris-wrap { padding: 40px var(--page-pad) 56px; }
+.qris-header { text-align: center; margin-bottom: 24px }
+.qris-header-ic { font-size: 44px; margin-bottom: 8px }
+.qris-header-ttl { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--br); font-weight: 700 }
+.qris-header-sub { font-size: 13px; color: var(--tm); margin-top: 4px; line-height: 1.5 }
+.qris-card { background: var(--cb); border: 1px solid var(--bd); border-radius: 16px; padding: 24px; margin-bottom: 16px; text-align: center }
+.qris-ord-num { display: inline-block; background: var(--gold); color: var(--br); font-size: 18px; font-weight: 700; padding: 8px 22px; border-radius: 10px; margin-bottom: 16px; font-family: 'Playfair Display', serif }
+.qris-img-wrap { width: 180px; height: 180px; margin: 0 auto 12px; background: var(--white); border: 2px dashed var(--bd); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; overflow: hidden }
+.qris-img-wrap img { width: 100%; height: 100%; object-fit: contain }
+.qris-expire { font-size: 10px; color: var(--tm); margin-bottom: 4px }
+.qris-amt-lbl { font-size: 11px; color: var(--tm) }
+.qris-amt-val { font-size: 24px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--br); margin-top: 2px }
+
+
+/* ============================================================
+   13. UPLOAD BUKTI BAYAR PAGE
+   ============================================================ */
+.upload-pg-banner { background: linear-gradient(135deg, #1B5E20, #2E7D32); padding: 56px 24px 40px; text-align: center }
+.upload-pg-ttl { font-family: 'Playfair Display', serif; font-size: 24px; color: #fff; font-weight: 700 }
+.upload-big-area { border: 2px dashed var(--gold); border-radius: 14px; padding: 34px 20px; text-align: center; cursor: pointer; transition: .25s; background: var(--cream); position: relative }
+.upload-big-area.has-file { border-color: #4CAF50; border-style: solid; background: #F1F8E9 }
+.btn-send-proof { width: 100%; padding: 15px; border-radius: 13px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; border: none; background: var(--br); color: var(--gold); margin-bottom: 9px; transition: .2s }
+
+div[id^="pg-upload"] > div:not(.upload-pg-banner) {
+  padding: 24px var(--page-pad) !important;
+}
+
+
+/* ============================================================
+   14. DONE / SUCCESS PAGE
+   ============================================================ */
+.done-banner { background: linear-gradient(135deg, var(--bm) 0%, var(--br) 100%); padding: 64px 24px 48px; text-align: center }
+.done-checkmark { width: 76px; height: 76px; background: rgba(200, 151, 47, .15); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 36px }
+.done-ttl { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--white); font-weight: 700 }
+.done-ord-badge { display: inline-block; background: var(--gold); color: var(--br); font-size: 22px; font-weight: 700; padding: 10px 28px; border-radius: 12px; margin-top: 18px; font-family: 'Playfair Display', serif }
+.done-step { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--bd) }
+.done-step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); color: var(--br); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px }
+
+.waiting-spinner { width: 52px; height: 52px; margin: 0 auto 12px; border: 3px solid var(--bd); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite }
+@keyframes spin { to { transform: rotate(360deg) } }
+.pulse-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pulse 1.5s infinite }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1) } 50% { opacity: .4; transform: scale(.7) } }
+
+.pb-safe { height: 80px }
+
+div[id^="pg-cash"] > div:not(.done-banner),
+div[id^="pg-success"] > div:not(.done-banner),
+div[id^="pg-rejected"] > div:not(.done-banner) {
+  padding: 24px var(--page-pad) !important;
+}
+
+
+/* ============================================================
+   15. FLOATING CART
+   ============================================================ */
+.float-cart {
+  position: fixed; left: 40px; right: 40px;
+  bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 60;
+  background: var(--br); color: var(--gold);
+  border: none; border-radius: 14px; padding: 16px 22px;
+  display: none; align-items: center; justify-content: space-between;
+  cursor: pointer; box-shadow: 0 6px 20px rgba(26,15,7,.35);
+  font-family: 'DM Sans', sans-serif; gap: 10px;
+  animation: floatUp .3s ease;
+}
+.float-cart.vis { display: flex }
+@keyframes floatUp { from { transform: translateY(30px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+.float-cart-left { display: flex; align-items: center; gap: 9px; }
+.float-cart-left .material-symbols-outlined { font-size: 22px; color: var(--gold) }
+.float-cart-count { background: var(--gold); color: var(--br); font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+.float-cart-txt { font-size: 14px; font-weight: 500; }
+.float-cart-price { font-size: 17px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--gold) }
+
+
+/* ============================================================
+   16. MODAL BOTTOM SHEET
+   Sama di semua breakpoint (self-contained, max-width 480px)
+   ============================================================ */
+.modal-overlay { position: fixed; inset: 0; background: rgba(26,15,7,.55); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
+.modal-overlay.show { display: flex; animation: fadeIn .2s ease }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+.modal-sheet {
+  background: var(--cream); width: 100%; max-width: 480px;
+  border-radius: 20px 20px 0 0; padding: 20px 18px calc(24px + env(safe-area-inset-bottom));
+  animation: slideUp .28s ease;
+  max-height: 85vh; overflow-y: auto;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+}
+@keyframes slideUp { from { transform: translateY(100%) } to { transform: translateY(0) } }
+.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--br); font-weight: 700; }
+.modal-close { background: none; border: none; font-size: 22px; color: var(--tm); cursor: pointer; line-height: 1; }
+.modal-sub { font-size: 11px; color: var(--tm); margin-bottom: 14px; }
+.modal-lbl { font-size: 11px; color: var(--tm); margin-bottom: 8px; display: block; font-weight: 500; letter-spacing: .5px; text-transform: uppercase; }
+.temp-opts { display: flex; gap: 10px; margin-bottom: 16px; }
+.temp-opt { flex: 1; padding: 13px; border: 1.5px solid var(--bd); border-radius: 12px; background: var(--white); text-align: center; cursor: pointer; transition: .15s; }
+.temp-opt.sel { border-color: var(--br); background: var(--cream); box-shadow: 0 0 0 1.5px var(--br); }
+.temp-opt-ic { font-size: 24px; margin-bottom: 4px; }
+.temp-opt-nm { font-size: 13px; font-weight: 600; color: var(--br); }
+
+
+/* ============================================================
+   17. DRINK ITEM
+   ============================================================ */
+.ditem { display: flex; gap: 11px; padding: 12px 0; border-bottom: 1px solid var(--bd); }
+.ditem:last-child { border: none; }
+.ditem-ic { width: 46px; height: 46px; border-radius: 12px; background: var(--cream); border: 1px solid var(--bd); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.ditem-mid { flex: 1; min-width: 0; }
+.ditem-nm { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; color: var(--br); }
+.ditem-temp { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-top: 3px; letter-spacing: .5px; }
+.ditem-temp.ice { background: #E3F2FD; color: #1565C0; }
+.ditem-temp.hot { background: #FBE9E7; color: #C0392B; }
+.ditem-note { font-size: 10px; color: var(--tm); margin-top: 4px; line-height: 1.4; font-style: italic; }
+.ditem-edit { font-size: 10px; color: var(--bl); font-weight: 600; cursor: pointer; margin-top: 5px; display: inline-flex; align-items: center; gap: 3px; }
+.ditem-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.ditem-price { font-size: 13px; font-weight: 600; color: var(--bm); white-space: nowrap; }
+
+
+/* ============================================================
+   18. PAYMENT SUMMARY / READONLY FIELD / PAYMENT METHOD LINE
+   ============================================================ */
+.pay-summary-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; color: var(--tm); }
+.pay-summary-row .v { color: var(--br); font-weight: 500; }
+.ro-field { background: var(--cream); border: 1px solid var(--bd); border-radius: 9px; padding: 12px; font-size: 13px; color: var(--br); display: flex; align-items: center; justify-content: space-between; }
+.ro-field .lock { font-size: 14px; color: var(--tm); }
+.pm-line { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--bd); gap: 10px; }
+.pm-line:last-of-type { border-bottom: none; }
+.pm-line-name { font-size: 13px; color: var(--br); font-weight: 500; }
+.pm-line-meta { font-size: 10px; color: var(--tm); margin-top: 2px; }
+.pm-line-sub { font-size: 13px; font-weight: 600; color: var(--bm); white-space: nowrap; }
+.pm-line-note { font-size: 10px; color: var(--tm); margin-top: 4px; font-style: italic; line-height: 1.4; }
+
+
+/* ============================================================
+   19. STATUS TRACKING PAGE
+   ============================================================ */
+.status-banner { background: linear-gradient(135deg, var(--bm) 0%, var(--br) 100%); padding: 64px 24px 48px; text-align: center; }
+.status-ttl { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--white); font-weight: 700; }
+.status-info-vert { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 14px; }
+.status-badge-now { display: inline-block; background: var(--gold); color: var(--br); font-size: 13px; font-weight: 700; padding: 7px 18px; border-radius: 20px; }
+.st-track { position: relative; }
+.st-node { display: flex; align-items: flex-start; gap: 14px; padding: 4px 0; }
+.st-dot-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.st-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--bd); color: var(--white); font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; z-index: 2; transition: .3s; }
+.st-dot.done { background: #4CAF50; }
+.st-dot.active { background: var(--gold); color: var(--br); box-shadow: 0 0 0 4px rgba(200,151,47,.25); }
+.st-line { width: 2px; flex: 1; min-height: 26px; background: var(--bd); transition: .3s; }
+.st-line.done { background: #4CAF50; }
+.st-body { padding-bottom: 20px; padding-top: 4px; }
+.st-body-t { font-size: 13px; font-weight: 600; color: var(--br); }
+.st-node.pending .st-body-t { color: var(--tm); font-weight: 400; }
+.st-body-s { font-size: 11px; color: var(--tm); margin-top: 2px; line-height: 1.4; }
+
+
+/* ============================================================
+   20. SHARED / REUSABLE PATTERNS
+   ============================================================ */
+.cust-info-bar { display: flex; align-items: center; gap: 10px; background: var(--cream); border: 1px solid var(--bd); border-radius: 11px; padding: 11px 14px; margin-bottom: 12px; }
+.cust-info-ic { font-size: 20px; }
+.cust-info-name { font-size: 13px; font-weight: 500; color: var(--br); }
+.cust-info-phone { font-size: 11px; color: var(--tm); }
+
+.done-step-t { font-size: 13px; font-weight: 500; color: var(--br); margin-bottom: 2px; }
+.done-step-s { font-size: 11px; color: var(--tm); line-height: 1.5; }
+
+.ocard-icon-title { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--br); margin-bottom: 12px; display: flex; align-items: center; gap: 7px; }
+
+.dashed-footer-card { background: var(--cream); border: 1px dashed var(--bd); border-radius: 14px; padding: 16px; text-align: center; }
+
+.info-note-yellow { background: #FFF8E1; border: 1px solid #FFD54F; border-radius: 11px; padding: 12px 14px; margin-bottom: 14px; font-size: 11px; color: #5D4037; line-height: 1.7; }
+
+.ocard.ocard-yellow { background: #FFF8E1; border-color: #FFD54F; }
+.note-text-yellow { font-size: 12px; color: #5D4037; line-height: 1.8; }
+
+.done-banner.success { background: linear-gradient(135deg, #2E7D32, #43A047); }
+.done-checkmark.success { border-color: #A5D6A7; background: rgba(165, 214, 167, .15); }
+.done-banner.rejected { background: linear-gradient(135deg, #B71C1C, #C62828); }
+.done-checkmark.rejected { border-color: #EF9A9A; background: rgba(239, 154, 154, .15); }
+.done-ord-badge.on-dark { background: rgba(255, 255, 255, .15); border: 1px solid rgba(255, 255, 255, .3); color: #fff; }
+
+.field-group { margin-bottom: 10px; }
+.required-mark { color: #C62828; }
+
+
+/* ============================================================
+   21. RESPONSIVE — TABLET (<=1023px)
+   ============================================================ */
+@media (max-width: 1023px) {
+  /* HEADER */
+  .hdr { height: 84px; padding: 24px 16px; }
+  .hdr-logo { font-size: 18px; }
+  .hdr-sub { font-size: 8px; }
+
+  /* FILTER BAR */
+  .filter-bar { padding: 10px 14px; top: 84px; }
+  .tab { font-size: 11px; padding: 6px 14px; }
+  .search-wrap.open { width: 150px; }
+  .search-wrap.open input { width: 108px; }
+
+  /* HERO */
+.hero { padding: 20px 20px; }
+  .hero h1 { font-size: 24px; }
+  .hero p { font-size: 12px; margin-top: 5px; max-width: none; }
+  .steps { margin-top: 15px; align-items: center; }
+  .stp { font-size: 11px; }
+  .stp-d { width: 22px; height: 22px; font-size: 10px; }
+  .stp-line { width: 24px; height: 2px; align-self: center; }
+
+  /* SECTION LABEL */
+  .sec-lbl { padding: 14px 18px 6px; font-size: 10px; }
+
+  /* MENU GRID: 2 KOLOM */
+  .mgrid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; padding: 0 20px 16px; }
+  .mcard-img, .mcard-img-ph { width: 80px; height: 80px; }
+  .mcard-body { padding: 9px 10px 11px; }
+  .mcard-name { font-size: 13px; }
+  .mcard-desc { font-size: 10px; }
+  .mcard-price { font-size: 13px; }
+  .mcard-price-lg { font-size: 15px; }
+
+  /* SECTION HEADER KATEGORI: sesuaikan ukuran di grid 2-kolom */
+  .mcat-section { padding-bottom: 10px; margin: 2px 0 0; }
+  .mcat-section-name { font-size: 14px; }
+
+  /* OWRAP / OCARD */
+  .owrap { padding: 14px; }
+  .ocard { padding: 14px; }
+  .ocard h3 { font-size: 15px; }
+
+  /* QRIS / UPLOAD / DONE / STATUS */
+  .qris-wrap { padding: 20px 16px 40px; }
+  .upload-pg-banner { padding: 40px 24px 32px; }
+  .done-banner { padding: 50px 24px 40px; }
+  .status-banner { padding: 40px 24px 32px; }
+
+  div[id^="pg-upload"] > div:not(.upload-pg-banner),
+  div[id^="pg-cash"] > div:not(.done-banner),
+  div[id^="pg-success"] > div:not(.done-banner),
+  div[id^="pg-rejected"] > div:not(.done-banner) {
+    padding: 16px !important;
+  }
+
+/* FLOAT CART: full-bleed mengikuti lebar layar, sama seperti desktop */
+  .float-cart {
+    left: 20px; right: 20px;
+    width: auto;
+    padding: 14px 18px;
+    animation: floatUp .3s ease;
+  }
+  .float-cart-txt { font-size: 13px; }
+  .float-cart-price { font-size: 15px; }
+
+  /* BACK BUTTON */
+  .back-btn { margin: 14px 14px 0; }
+}
+
+
+/* ============================================================
+   22. RESPONSIVE — MOBILE (<=639px)
+   ============================================================ */
+@media (max-width: 639px) {
+  body { background: var(--cream); display: block; }
+  .order-shell { max-width: none; box-shadow: none; }
+
+  /* MENU GRID: tetap 2 kolom di HP, jangan ikut auto-fill tablet
+     yang cuma muat 1 kolom di layar sempit */
+  .mgrid { grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 14px 16px; }
+
+  /* FLOAT CART: nempel tepi, bukan center */
+  .float-cart {
+    left: 14px; right: 14px;
+    width: auto;
+    transform: none;
+    animation: floatUp .3s ease;
+  }
+}
