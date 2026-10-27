@@ -98,7 +98,7 @@ model Pesanan {
   id               Int              @id @default(autoincrement()) @db.UnsignedInt
   kodePesanan     String            @unique(map: "kode_pesanan") @map("kode_pesanan") @db.VarChar(15)
   createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamp(0)
-  tanggalPesanan   DateTime         @default(dbgenerated("(cast(`created_at` as date))")) @map("tanggal_pesanan") @db.Date
+  tanggalPesanan   DateTime         @default(now()) @map("tanggal_pesanan") @db.Timestamp(0)
   idMeja           Int              @map("id_meja") @db.UnsignedSmallInt
   idKasir          Int?             @map("id_kasir") @db.UnsignedInt
   namaPelanggan    String           @map("nama_pelanggan") @db.VarChar(50)
