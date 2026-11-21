@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -13,6 +13,14 @@ export default function KasirLoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("demo") === "kasir") {
+      setUname("kasir");
+      setPass("kasir123");
+    }
+  }, []);
 
   async function doLogin() {
     if (loading) return; // cegah double-submit (Enter berkali-kali / klik cepat)

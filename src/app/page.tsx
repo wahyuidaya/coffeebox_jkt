@@ -186,7 +186,7 @@ export default function HomePage() {
                 Akun: <strong>kasir</strong> • Sandi: <strong>kasir123</strong>
               </div>
               <Link
-                href="/kasir/login"
+                href="/kasir/login?demo=kasir"
                 style={{
                   backgroundColor: "#5C2E1A",
                   color: "#FEFCF7",
@@ -243,7 +243,7 @@ export default function HomePage() {
                 Akun: <strong>superadmin</strong> • Sandi: <strong>admin123</strong>
               </div>
               <Link
-                href="/admin/login"
+                href="/admin/login?demo=admin"
                 style={{
                   backgroundColor: "#1A0F07",
                   color: "#FEFCF7",

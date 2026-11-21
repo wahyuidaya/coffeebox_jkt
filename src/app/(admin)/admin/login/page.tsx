@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
@@ -15,6 +15,14 @@ export default function AdminLoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("demo") === "admin") {
+      setUname("superadmin");
+      setPass("admin123");
+    }
+  }, []);
 
   function validateForm(): string | null {
     if (uname.trim().length === 0) return "Username wajib diisi.";
